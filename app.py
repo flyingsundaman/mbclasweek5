@@ -493,18 +493,18 @@ elif page == "Emotion Mining":
     # Contoh teks
     st.markdown("##### Contoh Teks:")
     examples = [
-        "Aku merasa sangat sedih hari ini.",
-        "Kamu hebat! Terus semangat!",
-        "Aku marah sekali dengan keputusan itu.",
-        "Semoga besok lebih baik.",
-        "Aku kecewa dengan janji yang tidak ditepati.",
+        "Kenapa aku WNI ya allah 😭😭😭.",
+        "Negara G*blok #INDONESIA GELAP",
+        "We stand with u pak tom",
+        "Semoga negriku diberikan Hidayah",
+        "19jt lapangan pejerjaan mana?, malah menjarain musuh politik 😒",
     ]
     for ex in examples:
         if st.button(f"💬 {ex}", key=f"ex_{ex}"):
             st.session_state.user_input = ex
 
     user_input = st.text_area(
-        "Masukkan teks dalam Bahasa Indonesia:",
+        "Tanggapanmu dengan kasus ini ?",
         value=st.session_state.get("user_input", ""),
         height=150,
         key="input_area",
@@ -593,6 +593,7 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
