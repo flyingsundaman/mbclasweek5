@@ -282,8 +282,6 @@ elif page == "Food-101":
     model = load_food_model()
     if model is None:
         st.stop()
-        
-    st.markdown(model.summary())
     
     st.image(
         "https://s3-eu-west-1.amazonaws.com/production-static-tff/app/uploads/2022/10/16050954/DkoIM24VAAApGkI-1280x480.jpeg",
@@ -592,6 +590,7 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
