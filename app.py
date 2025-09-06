@@ -9,11 +9,17 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import datetime
 
+
+
+
 # -----------------------------
 # Konfigurasi Halaman
 # -----------------------------
 st.set_page_config(
-    page_title="Multi-Model AI Demo", layout="wide", initial_sidebar_state="expanded"
+    page_title="MBC Learning Advanced Skill",
+    page_icon="https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",  # ← Logo dari URL
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # -----------------------------
@@ -161,9 +167,19 @@ if page == "Beranda":
     st.markdown(
         """
     <div style="background-color: #640D5F; padding: 14px; border-radius: 8px; border-left: 5px solid #007BFF;">
-    <b>Muhammad Rizaldi Shidiq</b>
-    <br>Divisi Big Data<br>
-    <br>CaAs 2518<br>
+    <b>Muhammad Rizaldi Shidiq</b><br>Divisi Big Data<br><br>
+    CaAs 2518<br>
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+    <div style="background-color: #640D5F; padding: 14px; border-radius: 8px; border-left: 5px solid #007BFF;">
+    <b>Indo RoBERTa Emotion Classifier</b><br>
+    Dataset: IndoNLU EmoT • F1: 72.05% • Akurasi: 71.81%<br>
+    <a href="https://huggingface.co/StevenLimcorn/indonesian-roberta-base-emotion-classifier" target="_blank">Lihat di Hugging Face</a>
     </div>
     """,
         unsafe_allow_html=True,
@@ -587,6 +603,7 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
