@@ -173,9 +173,12 @@ if page == "Beranda":
     """,
         unsafe_allow_html=True,
     )
-
-    
-    st.markdown("""
+    st.image(
+        "https://images.pexels.com/photos/955398/pexels-photo-955398.jpeg",
+        caption="",
+        use_container_width=True,
+    )
+    st.markdown("""\n
     
     | **Model** | **Deskripsi** |
     |-------|---------|
@@ -593,6 +596,7 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
