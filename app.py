@@ -162,7 +162,7 @@ MEME_CNN = {
 # -----------------------------
 if page == "Beranda":
  # Judul di tengah
-    st.title('<h1 class="centered">MBC Learning Advanced Skill</h1>', unsafe_allow_html=True)
+    st.title("MBC Learning Advanced Skill")
 
     st.markdown(
         """
@@ -206,7 +206,7 @@ elif page == "Kucing vs Anjing":
         st.stop()
     
     st.image(
-        "https://t3.ftcdn.net/jpg/12/78/23/76/360_F_1278237691_FB9e82aokVLPwGl3aXiPhl6hGsBpFCXX.jpg",
+        "https://www.dutch.com/cdn/shop/articles/shutterstock_2063910374.jpg?v=1678142890",
         caption="",
         use_container_width=True,
     )
@@ -603,6 +603,7 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
