@@ -581,11 +581,12 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
-st.sidebar.markdown.image(
+st.sidebar.image(
         "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
         caption="",
         use_container_width=True,
  )
+
 
 
 
