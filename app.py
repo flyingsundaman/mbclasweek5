@@ -64,7 +64,7 @@ st.markdown(
 # -----------------------------
 st.sidebar.title("Navigasi")
 page = st.sidebar.radio(
-    "Pilih Model", ["Beranda", "Kucing vs Anjing", "Food-101", "Analisis Emosi"]
+    "Pilih Model", ["Beranda", "Kucing vs Anjing", "Food-101", "Emotion Mining"]
 )
 
 # -----------------------------
@@ -181,6 +181,13 @@ elif page == "Kucing vs Anjing":
     if model is None:
         st.stop()
 
+    st.markdown(model.summary())
+    
+    st.image(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-Ep94Bo3znAkHSXzcEkDKRLi4aDh0pUbyGbMAPiPMawlvio0OZwLG3bsmuUPdEfw9f8&usqp=CAU",
+        caption="",
+        use_container_width=True,
+    )
     st.write("Input shape model:", model.input_shape)
 
     uploaded = st.file_uploader(
@@ -264,7 +271,14 @@ elif page == "Food-101":
     model = load_food_model()
     if model is None:
         st.stop()
-
+        
+    st.markdown(model.summary())
+    
+    st.image(
+        "https://s3-eu-west-1.amazonaws.com/production-static-tff/app/uploads/2022/10/16050954/DkoIM24VAAApGkI-1280x480.jpeg",
+        caption="",
+        use_container_width=True,
+    )
     st.write("Input shape model:", model.input_shape)
 
     uploaded = st.file_uploader("Upload gambar makanan", type=["jpg", "jpeg", "png"])
@@ -422,8 +436,8 @@ elif page == "Food-101":
 # -----------------------------
 # Halaman: Analisis Emosi
 # -----------------------------
-elif page == "Analisis Emosi":
-    st.title("Analisis Emosi - Bahasa Indonesia")
+elif page == "Emotion Mining":
+    st.title("Emotion Mining - Kasus Tom Lembong")
 
     st.markdown(
         """
@@ -435,7 +449,13 @@ elif page == "Analisis Emosi":
     """,
         unsafe_allow_html=True,
     )
-
+    
+    st.image(
+        "https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/186/2024/10/30/Screenshot-2024-10-30-at-010727-2419400608.png",
+        caption="Korupsi Impor Gula Tom Lembong",
+        use_container_width=True,
+    )
+    
     model, tokenizer = load_nlp_model()
     if model is None:
         st.stop()
@@ -554,5 +574,6 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
 
 
