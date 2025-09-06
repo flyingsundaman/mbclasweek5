@@ -427,7 +427,7 @@ elif page == "Analisis Emosi":
 
     st.markdown(
         """
-    <div style="background-color: #e7f3ff; padding: 14px; border-radius: 8px; border-left: 5px solid #007BFF;">
+    <div style="background-color: #640D5F; padding: 14px; border-radius: 8px; border-left: 5px solid #007BFF;">
     <b>Indo RoBERTa Emotion Classifier</b><br>
     Dataset: IndoNLU EmoT • F1: 72.05% • Akurasi: 71.81%<br>
     <a href="https://huggingface.co/StevenLimcorn/indonesian-roberta-base-emotion-classifier" target="_blank">Lihat di Hugging Face</a>
@@ -554,4 +554,5 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
 
