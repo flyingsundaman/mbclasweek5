@@ -158,7 +158,7 @@ if page == "Beranda":
     st.title("MBC LAS W")
     st.markdown("""
     
-    | **Model** | **Deskripsi |
+    | **Model** | **Deskripsi** |
     |-------|---------|
     | **Kucing vs Anjing** |Klasifikasi gambar binatang menggunakan CNN |
     | **Food-101** | Klasifikasi 101 jenis makanan dunia |
@@ -584,6 +584,7 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
