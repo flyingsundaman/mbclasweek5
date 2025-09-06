@@ -158,13 +158,26 @@ if page == "Beranda":
     st.title("MBC LAS W")
     st.markdown("""
     
-    |**Model**|**Deskripsi|
-    |**Kucing vs Anjing** |Klasifikasi gambar binatang menggunakan CNN|
-    |**Food-101**| Klasifikasi 101 jenis makanan dunia|
-    |**Emotion Mining **| Klasifikasi emosi terhadap kasus Tom Lembong|
+    | **Model** | **Deskripsi |
+    |-------|---------|
+    | **Kucing vs Anjing** |Klasifikasi gambar binatang menggunakan CNN |
+    | **Food-101** | Klasifikasi 101 jenis makanan dunia |
+    | **Emotion Mining ** | Klasifikasi emosi terhadap kasus Tom Lembong |
 
     """)
+st.markdown("""
+### 📊 Hasil Evaluasi Model
 
+| Epoch | Akurasi | F1-Score | Precision | Recall |
+|-------|---------|----------|-----------|--------|
+| 1     | 62.27%  | 60.18%   | 64.08%    | 61.11% |
+| 2     | 68.64%  | 69.41%   | 70.20%    | 69.67% |
+| 3     | 68.64%  | 69.66%   | 70.75%    | 69.17% |
+| 4     | 72.27%  | 72.44%   | 72.60%    | 73.02% |
+| 5     | 71.14%  | 72.06%   | 71.83%    | 72.46% |
+| 6     | 71.82%  | 72.42%   | 72.12%    | 72.92% |
+| 7     | 72.50%  | 73.36%   | 73.17%    | 73.58% |
+""")
     st.image(
         "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
         caption="",
@@ -571,6 +584,7 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
