@@ -155,20 +155,19 @@ MEME_CNN = {
 # Halaman: Beranda
 # -----------------------------
 if page == "Beranda":
-    st.title("Multi-Model AI Demo")
+    st.title("MBC LAS W")
     st.markdown("""
-    Aplikasi ini menampilkan tiga model deep learning:
+    
+    |**Model**|**Deskripsi|
+    |**Kucing vs Anjing** |Klasifikasi gambar binatang menggunakan CNN|
+    |**Food-101**| Klasifikasi 101 jenis makanan dunia|
+    |**Emotion Mining **| Klasifikasi emosi terhadap kasus Tom Lembong|
 
-    - **Kucing vs Anjing**: Klasifikasi gambar binatang menggunakan CNN
-    - **Food-101**: Klasifikasi 101 jenis makanan dunia
-    - **Analisis Emosi**: Klasifikasi emosi teks Bahasa Indonesia
-
-    Gunakan menu di sebelah kiri untuk mencoba setiap model.
     """)
 
     st.image(
-        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-        caption="Demo Multi-Model Deep Learning",
+        "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
+        caption="",
         use_container_width=True,
     )
 
@@ -180,11 +179,9 @@ elif page == "Kucing vs Anjing":
     model = load_catdog_model()
     if model is None:
         st.stop()
-
-    st.markdown(model.summary())
     
     st.image(
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-Ep94Bo3znAkHSXzcEkDKRLi4aDh0pUbyGbMAPiPMawlvio0OZwLG3bsmuUPdEfw9f8&usqp=CAU",
+        "https://t3.ftcdn.net/jpg/12/78/23/76/360_F_1278237691_FB9e82aokVLPwGl3aXiPhl6hGsBpFCXX.jpg",
         caption="",
         use_container_width=True,
     )
@@ -574,6 +571,7 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
