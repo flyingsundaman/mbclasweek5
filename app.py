@@ -156,17 +156,18 @@ MEME_CNN = {
 # -----------------------------
 if page == "Beranda":
  # Judul di tengah
-    st.markdown('<h1 class="centered">MBC Learning Advanced Skill</h1>', unsafe_allow_html=True)
+    st.title('<h1 class="centered">MBC Learning Advanced Skill</h1>', unsafe_allow_html=True)
 
-    # Profil di tengah
-    st.markdown("""
-    <div class="header-box">
-        <b>Muhammad Rizaldi Shidiq</b><br>
-        Divisi Big Data<br>
-        CaAs 2518
+    st.markdown(
+        """
+    <div style="background-color: #640D5F; padding: 14px; border-radius: 8px; border-left: 5px solid #007BFF;">
+    <b>Muhammad Rizaldi Shidiq</b>
+    <br>Divisi Big Data<br>
+    <br>CaAs 2518<br>
     </div>
-    <br><br>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
     
     st.markdown("""
     
@@ -573,6 +574,11 @@ if st.session_state.feedback_log:
     correct = len(df[df.feedback == "correct"])
     total = len(df)
     st.sidebar.metric("Benar", f"{correct}/{total}")
+st.sidebar.image(
+        "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
+        caption="",
+        use_container_width=True,
+ )
 st.sidebar.markdown(
     """
 <div class='footer'>
@@ -581,11 +587,8 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
-st.sidebar.image(
-        "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
-        caption="",
-        use_container_width=True,
- )
+
+
 
 
 
