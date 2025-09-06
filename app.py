@@ -17,7 +17,7 @@ from datetime import datetime
 # -----------------------------
 st.set_page_config(
     page_title="MBC Learning Advanced Skill",
-    page_icon="https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",  # ← Logo dari URL
+    page_icon="💾",  # ← Logo dari URL
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -603,6 +603,7 @@ Streamlit Project
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
