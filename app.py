@@ -155,34 +155,29 @@ MEME_CNN = {
 # Halaman: Beranda
 # -----------------------------
 if page == "Beranda":
-    st.title("MBC LAS W")
+ # Judul di tengah
+    st.markdown('<h1 class="centered">MBC Learning Advanced Skill</h1>', unsafe_allow_html=True)
+
+    # Profil di tengah
+    st.markdown("""
+    <div class="header-box">
+        <b>Muhammad Rizaldi Shidiq</b><br>
+        Divisi Big Data<br>
+        CaAs 2518
+    </div>
+    <br><br>
+    """, unsafe_allow_html=True)
+    
     st.markdown("""
     
     | **Model** | **Deskripsi** |
     |-------|---------|
     | **Kucing vs Anjing** |Klasifikasi gambar binatang menggunakan CNN |
     | **Food-101** | Klasifikasi 101 jenis makanan dunia |
-    | **Emotion Mining ** | Klasifikasi emosi terhadap kasus Tom Lembong |
+    | **Emotion Mining** | Klasifikasi emosi terhadap kasus Tom Lembong |
 
     """)
-    st.markdown("""
-### 📊 Hasil Evaluasi Model
 
-| Epoch | Akurasi | F1-Score | Precision | Recall |
-|-------|---------|----------|-----------|--------|
-| 1     | 62.27%  | 60.18%   | 64.08%    | 61.11% |
-| 2     | 68.64%  | 69.41%   | 70.20%    | 69.67% |
-| 3     | 68.64%  | 69.66%   | 70.75%    | 69.17% |
-| 4     | 72.27%  | 72.44%   | 72.60%    | 73.02% |
-| 5     | 71.14%  | 72.06%   | 71.83%    | 72.46% |
-| 6     | 71.82%  | 72.42%   | 72.12%    | 72.92% |
-| 7     | 72.50%  | 73.36%   | 73.17%    | 73.58% |
-""") 
-    st.image(
-        "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
-        caption="",
-        use_container_width=True,
-    )
 
 # -----------------------------
 # Halaman: Kucing vs Anjing
@@ -460,6 +455,8 @@ elif page == "Emotion Mining":
         unsafe_allow_html=True,
     )
     
+    st.markdown("")
+    
     st.image(
         "https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/186/2024/10/30/Screenshot-2024-10-30-at-010727-2419400608.png",
         caption="Korupsi Impor Gula Tom Lembong",
@@ -579,11 +576,16 @@ if st.session_state.feedback_log:
 st.sidebar.markdown(
     """
 <div class='footer'>
-Dibangun dengan ❤️ menggunakan Streamlit
+Streamlit Project
 </div>
 """,
     unsafe_allow_html=True,
 )
+st.sidebar.markdown.image(
+        "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
+        caption="",
+        use_container_width=True,
+ )
 
 
 
