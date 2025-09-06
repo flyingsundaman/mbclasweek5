@@ -1,16 +1,63 @@
 import streamlit as st
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import torch
 import tensorflow as tf
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from huggingface_hub import hf_hub_download
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+from datetime import datetime
 
 # -----------------------------
 # Konfigurasi Halaman
 # -----------------------------
-st.set_page_config(page_title="Multi-Model AI Demo", layout="wide")
+st.set_page_config(
+    page_title="Multi-Model AI Demo", layout="wide", initial_sidebar_state="expanded"
+)
+
+# -----------------------------
+# CSS Kustom
+# -----------------------------
+st.markdown(
+    """
+<style>
+    .main { background-color: #f9f9f9; }
+    .section-title {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-top: 1.2rem;
+        margin-bottom: 0.6rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    .metric-card {
+        background-color: #f1f3f5;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .feedback-box {
+        padding: 10px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-size: 0.95em;
+    }
+    .correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .wrong { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .footer {
+        text-align: center;
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
 # Sidebar Navigasi
@@ -19,6 +66,14 @@ st.sidebar.title("Navigasi")
 page = st.sidebar.radio(
     "Pilih Model", ["Beranda", "Kucing vs Anjing", "Food-101", "Analisis Emosi"]
 )
+
+# -----------------------------
+# Inisialisasi Session State
+# -----------------------------
+if "feedback_log" not in st.session_state:
+    st.session_state.feedback_log = []
+if "start_time" not in st.session_state:
+    st.session_state.start_time = datetime.now()
 
 
 # -----------------------------
@@ -40,7 +95,7 @@ def get_feature_maps(model, input_tensor, layer_names):
 
 
 # -----------------------------
-# Load Model (dengan cache)
+# Load Model
 # -----------------------------
 @st.cache_resource
 def load_catdog_model():
@@ -51,7 +106,7 @@ def load_catdog_model():
         model = tf.keras.models.load_model(model_path, compile=False)
         return model
     except Exception as e:
-        st.error(f"Gagal memuat model Kucing vs Anjing: {e}")
+        st.error(f"Gagal muat model Kucing vs Anjing: {e}")
         return None
 
 
@@ -64,7 +119,7 @@ def load_food_model():
         model = tf.keras.models.load_model(model_path, compile=False)
         return model
     except Exception as e:
-        st.error(f"Gagal memuat model Food-101: {e}")
+        st.error(f"Gagal muat model Food-101: {e}")
         return None
 
 
@@ -76,9 +131,25 @@ def load_nlp_model():
         model = AutoModelForSequenceClassification.from_pretrained(model_name)
         return model, tokenizer
     except Exception as e:
-        st.error(f"Gagal memuat model NLP: {e}")
+        st.error(f"Gagal muat model NLP: {e}")
         return None, None
 
+
+# -----------------------------
+# URL Meme
+# -----------------------------
+MEME_NLP = {
+    "SADNESS": "https://media.tenor.com/f1fVZ5yuLaIAAAAM/sad.gif",
+    "ANGER": "https://media1.tenor.com/m/KuuC_7Oy1FEAAAAd/prabowo-marah-angry.gif",
+    "SUPPORT": "https://media1.tenor.com/m/ba-O8SSOaswAAAAC/cute-bear-silvia-emoji.gif",
+    "HOPE": "https://media1.tenor.com/m/quKCeO2K3fIAAAAC/homer-simpson-prier.gif",
+    "DISAPPOINTMENT": "https://media1.tenor.com/m/ciNDyf6AgH0AAAAd/disappointed-disappointed-fan.gif",
+}
+
+MEME_CNN = {
+    "correct": "https://media1.tenor.com/m/7Ypq9_9najcAAAAd/thumbs-up-double-thumbs-up.gif",  # thumbs up
+    "wrong": "https://media1.tenor.com/m/y--slZ8dhqYAAAAC/donald-trump-wrong.gif",  # shrug
+}
 
 # -----------------------------
 # Halaman: Beranda
@@ -98,7 +169,7 @@ if page == "Beranda":
     st.image(
         "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
         caption="Demo Multi-Model Deep Learning",
-        use_column_width=True,
+        use_container_width=True,
     )
 
 # -----------------------------
@@ -117,26 +188,66 @@ elif page == "Kucing vs Anjing":
     )
     if uploaded:
         image = Image.open(uploaded).convert("RGB")
-        st.image(image, caption="Gambar yang diunggah", use_column_width=True)
+        st.image(image, caption="Gambar yang diunggah", use_container_width=True)
 
         target_size = tuple(model.input_shape[1:3])
         input_tensor = preprocess_image(image, target_size)
 
         with st.spinner("Menganalisis..."):
             pred = model.predict(input_tensor, verbose=0)[0][0]
-        label = "Kucing" if pred > 0.5 else "Anjing"
+
+        predicted_class = "Anjing" if pred > 0.5 else "Kucing"
         confidence = float(pred if pred > 0.5 else 1 - pred)
 
-        st.subheader("Hasil Prediksi")
-        st.write(f"**Kelas:** {label}")
-        st.metric("Keyakinan", f"{confidence:.4f}")
+        st.markdown(
+            '<div class="section-title">Hasil Prediksi</div>', unsafe_allow_html=True
+        )
+        col1, col2 = st.columns(2)
+        col1.write(f"**Kelas:** {predicted_class}")
+        col2.metric("Keyakinan", f"{confidence:.4f}")
 
-        st.subheader("Visualisasi Feature Map")
+        # Feedback user
+        st.markdown(
+            '<div class="section-title">Apakah prediksi ini benar?</div>',
+            unsafe_allow_html=True,
+        )
+        cols = st.columns(2)
+        feedback = None
+        with cols[0]:
+            if st.button("✅ Benar", key="dogcat_correct"):
+                feedback = "correct"
+                st.success("Terima kasih!")
+                st.balloons()
+        with cols[1]:
+            if st.button("❌ Salah", key="dogcat_wrong"):
+                feedback = "wrong"
+                st.warning("Terima kasih atas masukan!")
+
+        # Tampilkan meme jika ada feedback
+        if feedback:
+            st.image(MEME_CNN[feedback], width=200, caption="Reaksi Anda")
+
+        # Simpan feedback
+        if feedback:
+            st.session_state.feedback_log.append(
+                {
+                    "task": "catdog",
+                    "predicted": predicted_class,
+                    "feedback": feedback,
+                    "timestamp": str(datetime.now()),
+                }
+            )
+
+        # Feature Map
+        st.markdown(
+            '<div class="section-title">Visualisasi Feature Map</div>',
+            unsafe_allow_html=True,
+        )
         conv_layers = [layer.name for layer in model.layers if "conv" in layer.name][:4]
         if conv_layers:
             activations = get_feature_maps(model, input_tensor, conv_layers)
             for layer_name, act in zip(conv_layers, activations):
-                st.markdown(f"**Layer:** {layer_name}")
+                st.markdown(f"**{layer_name}**")
                 fig, axes = plt.subplots(1, min(4, act.shape[-1]), figsize=(10, 3))
                 for j in range(min(4, act.shape[-1])):
                     axes[j].imshow(act[0, :, :, j], cmap="viridis")
@@ -159,14 +270,14 @@ elif page == "Food-101":
     uploaded = st.file_uploader("Upload gambar makanan", type=["jpg", "jpeg", "png"])
     if uploaded:
         image = Image.open(uploaded).convert("RGB")
-        st.image(image, caption="Makanan yang diunggah", use_column_width=True)
+        st.image(image, caption="Makanan yang diunggah", use_container_width=True)
 
         target_size = tuple(model.input_shape[1:3])
         input_tensor = preprocess_image(image, target_size)
 
         with st.spinner("Menganalisis makanan..."):
             pred = model.predict(input_tensor, verbose=0)[0]
-            top_indices = np.argsort(pred)[::-1][:3]
+            top_idx = np.argsort(pred)[::-1][0]
 
         class_names = [
             "apple pie",
@@ -267,59 +378,109 @@ elif page == "Food-101":
             "strawberry shortcake",
             "sushi",
             "tacos",
-            "octopus",
-            "omelette",
-            "onion rings",
         ]
 
-        st.subheader("Top 3 Prediksi")
-        for i, idx in enumerate(top_indices):
-            label = class_names[idx].title()
-            confidence = pred[idx]
-            st.write(f"{i + 1}. **{label}** — {confidence:.4f}")
+        predicted_food = class_names[top_idx].title()
+        confidence = float(pred[top_idx])
 
-        st.subheader("Visualisasi Feature Map")
-        conv_layers = [layer.name for layer in model.layers if "conv" in layer.name][:3]
-        if conv_layers:
-            activations = get_feature_maps(model, input_tensor, conv_layers)
-            for layer_name, act in zip(conv_layers, activations):
-                st.markdown(f"**Layer:** {layer_name}")
-                fig, axes = plt.subplots(1, 3, figsize=(10, 3))
-                for j in range(3):
-                    if j < act.shape[-1]:
-                        axes[j].imshow(act[0, :, :, j], cmap="plasma")
-                        axes[j].axis("off")
-                    else:
-                        axes[j].axis("off")
-                plt.tight_layout()
-                st.pyplot(fig)
-                plt.close()
+        st.markdown(
+            '<div class="section-title">Hasil Prediksi</div>', unsafe_allow_html=True
+        )
+        st.write(f"**Makanan:** {predicted_food}")
+        st.metric("Keyakinan", f"{confidence:.4f}")
+
+        # Feedback
+        st.markdown(
+            '<div class="section-title">Apakah prediksi ini benar?</div>',
+            unsafe_allow_html=True,
+        )
+        cols = st.columns(2)
+        feedback = None
+        with cols[0]:
+            if st.button("✅ Benar", key="food_correct"):
+                feedback = "correct"
+                st.success("Terima kasih!")
+                st.balloons()
+        with cols[1]:
+            if st.button("❌ Salah", key="food_wrong"):
+                feedback = "wrong"
+                st.warning("Terima kasih atas masukan!")
+
+        if feedback:
+            st.image(MEME_CNN[feedback], width=200, caption="Reaksi Anda")
+
+        if feedback:
+            st.session_state.feedback_log.append(
+                {
+                    "task": "food",
+                    "predicted": predicted_food,
+                    "feedback": feedback,
+                    "timestamp": str(datetime.now()),
+                }
+            )
 
 # -----------------------------
 # Halaman: Analisis Emosi
 # -----------------------------
 elif page == "Analisis Emosi":
     st.title("Analisis Emosi - Bahasa Indonesia")
-    st.markdown("""
-    Model: [StevenLimcorn/indonesian-roberta-base-emotion-classifier](https://huggingface.co/StevenLimcorn/indonesian-roberta-base-emotion-classifier)  
-    Dataset: IndoNLU EmoT | F1-score: 72.05% | Akurasi: 71.81%
-    """)
+
+    st.markdown(
+        """
+    <div style="background-color: #e7f3ff; padding: 14px; border-radius: 8px; border-left: 5px solid #007BFF;">
+    <b>Indo RoBERTa Emotion Classifier</b><br>
+    Dataset: IndoNLU EmoT • F1: 72.05% • Akurasi: 71.81%<br>
+    <a href="https://huggingface.co/StevenLimcorn/indonesian-roberta-base-emotion-classifier" target="_blank">Lihat di Hugging Face</a>
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
 
     model, tokenizer = load_nlp_model()
     if model is None:
         st.stop()
 
+    # Label mapping (di luar try)
+    label_mapping = {
+        0: "SADNESS",
+        1: "ANGER",
+        2: "SUPPORT",
+        3: "HOPE",
+        4: "DISAPPOINTMENT",
+    }
+    desc_mapping = {
+        0: "Komentar bernuansa kesedihan atau duka.",
+        1: "Komentar bernuansa kemarahan atau kekesalan.",
+        2: "Komentar yang menunjukkan dukungan atau pembelaan.",
+        3: "Komentar yang mengekspresikan harapan positif untuk masa depan.",
+        4: "Komentar bernuansa kekecewaan terhadap situasi atau pihak tertentu.",
+    }
+
+    # Contoh teks
+    st.markdown("##### Contoh Teks:")
+    examples = [
+        "Aku merasa sangat sedih hari ini.",
+        "Kamu hebat! Terus semangat!",
+        "Aku marah sekali dengan keputusan itu.",
+        "Semoga besok lebih baik.",
+        "Aku kecewa dengan janji yang tidak ditepati.",
+    ]
+    for ex in examples:
+        if st.button(f"💬 {ex}", key=f"ex_{ex}"):
+            st.session_state.user_input = ex
+
     user_input = st.text_area(
         "Masukkan teks dalam Bahasa Indonesia:",
+        value=st.session_state.get("user_input", ""),
         height=150,
-        placeholder="Contoh: 'Aku merasa sedih hari ini...' atau 'Saya bangga denganmu!'",
+        key="input_area",
     )
 
-    if st.button("Analisis Emosi"):
+    if st.button("🔍 Analisis Emosi"):
         if not user_input.strip():
-            st.warning("Mohon masukkan teks terlebih dahulu.")
+            st.warning("Masukkan teks terlebih dahulu.")
         else:
-            with st.spinner("Menganalisis emosi..."):
+            with st.spinner("Menganalisis..."):
                 try:
                     inputs = tokenizer(
                         user_input,
@@ -330,54 +491,66 @@ elif page == "Analisis Emosi":
                     )
                     with torch.no_grad():
                         logits = model(**inputs).logits
-                    predicted_class_id = logits.argmax(-1).item()
-
-                    label_mapping = {
-                        0: "SADNESS",
-                        1: "ANGER",
-                        2: "SUPPORT",
-                        3: "HOPE",
-                        4: "DISAPPOINTMENT",
-                    }
-
-                    description_mapping = {
-                        0: "Komentar bernuansa kesedihan atau duka.",
-                        1: "Komentar bernuansa kemarahan atau kekesalan.",
-                        2: "Komentar yang menunjukkan dukungan atau pembelaan.",
-                        3: "Komentar yang mengekspresikan harapan positif untuk masa depan.",
-                        4: "Komentar bernuansa kekecewaan terhadap situasi atau pihak tertentu.",
-                    }
-
-                    predicted_label = label_mapping.get(predicted_class_id, "Unknown")
-                    predicted_desc = description_mapping.get(
-                        predicted_class_id, "Tidak dikenali"
-                    )
-
+                    pred_id = logits.argmax(-1).item()
                     probs = torch.nn.functional.softmax(logits, dim=-1)[0].cpu().numpy()
 
-                    st.subheader("Hasil Prediksi")
-                    st.markdown(f"**Label Numerik:** `{predicted_class_id}`")
-                    st.markdown(f"**Label Teks:** `{predicted_label}`")
-                    st.markdown(f"**Keterangan:** {predicted_desc}")
+                    label = label_mapping.get(pred_id, "Unknown")
+                    desc = desc_mapping.get(pred_id, "Tidak dikenali")
 
-                    st.subheader("Distribusi Probabilitas")
-                    fig, ax = plt.subplots(figsize=(7, 6))
-                    labels = [label_mapping[i] for i in range(5)]
-                    colors = ["#ff9999", "#ffcc99", "#99cc99", "#66b3ff", "#ffcc66"]
-                    ax.pie(
-                        probs,
-                        labels=labels,
-                        autopct="%1.1f%%",
-                        startangle=90,
-                        colors=colors,
-                        textprops={"fontsize": 10},
-                    )
-                    ax.axis("equal")
-                    st.pyplot(fig)
-
-                    with st.expander("Detail Probabilitas"):
-                        for i in range(5):
-                            st.write(f"{label_mapping[i]}: {probs[i]:.4f}")
-
+                    st.session_state.last_result = {
+                        "text": user_input,
+                        "label": label,
+                        "desc": desc,
+                        "probs": probs,
+                    }
                 except Exception as e:
-                    st.error(f"Terjadi kesalahan: {e}")
+                    st.error(f"Error: {e}")
+
+    if "last_result" in st.session_state:
+        res = st.session_state.last_result
+
+        st.markdown(
+            '<div class="section-title">Hasil Prediksi</div>', unsafe_allow_html=True
+        )
+        st.markdown(f"**Label Teks:** `{res['label']}`")
+        st.markdown(f"**Keterangan:** {res['desc']}")
+
+        # Meme sesuai label emosi
+        if res["label"] in MEME_NLP:
+            st.image(
+                MEME_NLP[res["label"]], width=250, caption=f"Reaksi: {res['label']}"
+            )
+
+        # Pie Chart
+        st.markdown(
+            '<div class="section-title">Distribusi Probabilitas</div>',
+            unsafe_allow_html=True,
+        )
+        fig, ax = plt.subplots(figsize=(7, 7))
+        labels = [label_mapping[i] for i in range(5)]
+        colors = ["#e74c3c", "#f39c12", "#2ecc71", "#3498db", "#9b59b6"]
+        ax.pie(
+            res["probs"], labels=labels, autopct="%1.1f%%", startangle=90, colors=colors
+        )
+        ax.axis("equal")
+        st.pyplot(fig)
+        plt.close()
+
+# -----------------------------
+# Footer
+# -----------------------------
+st.sidebar.markdown("---")
+if st.session_state.feedback_log:
+    st.sidebar.markdown("### 📊 Statistik Feedback")
+    df = pd.DataFrame(st.session_state.feedback_log)
+    correct = len(df[df.feedback == "correct"])
+    total = len(df)
+    st.sidebar.metric("Benar", f"{correct}/{total}")
+st.sidebar.markdown(
+    """
+<div class='footer'>
+Dibangun dengan ❤️ menggunakan Streamlit
+</div>
+""",
+    unsafe_allow_html=True,
+)
