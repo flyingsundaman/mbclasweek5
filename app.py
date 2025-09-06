@@ -165,7 +165,7 @@ if page == "Beranda":
     | **Emotion Mining ** | Klasifikasi emosi terhadap kasus Tom Lembong |
 
     """)
-st.markdown("""
+    st.markdown("""
 ### 📊 Hasil Evaluasi Model
 
 | Epoch | Akurasi | F1-Score | Precision | Recall |
@@ -177,7 +177,7 @@ st.markdown("""
 | 5     | 71.14%  | 72.06%   | 71.83%    | 72.46% |
 | 6     | 71.82%  | 72.42%   | 72.12%    | 72.92% |
 | 7     | 72.50%  | 73.36%   | 73.17%    | 73.58% |
-""")
+""") 
     st.image(
         "https://mbc-laboratory.vercel.app/_next/image?url=%2FMBC.png&w=384&q=75",
         caption="",
@@ -584,6 +584,7 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
 
 
 
