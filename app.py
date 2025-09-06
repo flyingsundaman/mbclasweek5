@@ -196,7 +196,7 @@ elif page == "Kucing vs Anjing":
         with st.spinner("Menganalisis..."):
             pred = model.predict(input_tensor, verbose=0)[0][0]
 
-        predicted_class = "Anjing" if pred > 0.5 else "Kucing"
+        predicted_class = "Kucing" if pred > 0.5 else "Anjing"
         confidence = float(pred if pred > 0.5 else 1 - pred)
 
         st.markdown(
@@ -554,3 +554,4 @@ Dibangun dengan ❤️ menggunakan Streamlit
 """,
     unsafe_allow_html=True,
 )
+
